@@ -70,8 +70,8 @@ void uart_init(void){
 }
 
 void uart_sendChar(char data){
-    UART1_DR_R &= 0x00;
-    UART1_DR_R += data;
+    while((UART1_FR_R&0x0020) != 0); // Wait until TXFF is 0
+    UART1_DR_R = data;
 }
 
 char uart_receive(void){
