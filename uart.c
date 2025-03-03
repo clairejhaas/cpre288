@@ -1,3 +1,4 @@
+
 /*
 *
 *   uart.c
@@ -11,9 +12,10 @@
 #include <inc/tm4c123gh6pm.h>
 #include <stdint.h>
 #include "uart.h"
+#include "lcd.h"
 
 void uart_init(void){
-	//TODO
+    //TODO
   //enable clock to GPIO port B
   SYSCTL_RCGCGPIO_R |=  0x02;
 
@@ -81,7 +83,7 @@ char uart_receive(void){
 }
 
 void uart_sendStr(const char *data){
-	// For reference see lcd_puts from lcd.c file
+    // For reference see lcd_puts from lcd.c file
   while (*data != '\0') {
     lcd_putc(*data);
     *data++;

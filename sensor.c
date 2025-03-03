@@ -1,4 +1,5 @@
 
+
 /*
  * sensor.c
  *
@@ -30,15 +31,9 @@ void send_string_uart_library(char msg[]){
         int i;
         for (i = 0; i < strlen(msg); i++){
             uart_sendChar(msg[i]);
+            lcd_putc(msg[i]);
         }
 
-        // Formats the characters received and moves to next line on LCD
-        char lcd_format[strlen(msg)+1];
-        sprintf(lcd_format, "%c\n",msg);
-        lcd_printf(msg);
-        lcd_printf(strlen(msg)); // prints the size of buffer
-
-        
 }
 
 

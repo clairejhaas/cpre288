@@ -1,3 +1,4 @@
+
 /**
  * lab5_template.c
  *
@@ -22,57 +23,48 @@
 #include "cyBot_Scan.h"  // Scan using CyBot servo and sensors
 
 
-#warning "Possible unimplemented functions"
-#define REPLACEME 0
-
+// #warning "Possible unimplemented functions"
 
 
 int main(void) {
-	button_init();
-	timer_init(); // Must be called before lcd_init(), which uses timer functions
-	lcd_init();
+    button_init();
+    timer_init(); // Must be called before lcd_init(), which uses timer functions
+    lcd_init();
 
   // initialize the cyBot UART1 before trying to use it
 
   // (Uncomment ME for UART init part of lab)
-	cyBot_uart_init_clean();  // Clean UART1 initialization, before running your UART1 GPIO init code
+    cyBot_uart_init_clean();  // Clean UART1 initialization, before running your UART1 GPIO init code
 
-//		// Initialize the scan
-//	  // cyBOT_init_Scan();
-//		// Remember servo calibration function and variables from Lab 3
+//      // Initialize the scan
+//    // cyBOT_init_Scan();
+//      // Remember servo calibration function and variables from Lab 3
 //
-//	// YOUR CODE HERE
+//  // YOUR CODE HERE
 
-	uart_init();
-	int buffer = 0;
-	char buffer_array[21];
+    uart_init();
 
-	while(1)
-	{
-	    char data = uart_receive();
-		
-		// char msg[50];
-	    // sprintf(msg, "Received a %c\n\r", data); // From lab 3
-		
-		// send_string_uart_library(data); // debug one character at a time
+    char msg[2];
+    char buffer_array[21];
+    while(1)
+    {
+        char data = uart_receive();
+        sprintf(msg, "%c", data); // Format to array to fit lab 3 syntax
 
-		
-		while (data != '\r') | (buffer < 20) {
-			sprintf(buffer_array,"%c",data);
-			// Debug printing by sending one byte at a time. Will need to comment out later
-			send_string_uart_library(data);
+        // if the buffer_array becomes 20 or is enter. Stop and print out line on LCD
+        if(strlen(buffer_array) == 20 | data == '\r') {
+            lcd_clear();
+            lcd_printf(buffer_array);
+        }
+        else {
+            strncat(buffer_array, &data, 1);
+            send_string_uart_library(msg); // sends character to PuTTy and LCD one by one
 
-			buffer +=1;
+            // will need to do some formatting to get on correct LCD line
+            // prints the size of the buffer
+            lcd_printf("%d",strlen(buffer_array));
+        }
 
-		}
-		if (data == '\r') | (buffer == 20){
-			lcd_clear();
-			send_string_uart_library(buffer_array);
-			buffer = 0; // resets buffer
-
-		}
-		
-		
-	}
+    }
 
 }
