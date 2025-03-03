@@ -70,14 +70,20 @@ void uart_init(void){
 }
 
 void uart_sendChar(char data){
-    while((UART1_FR_R&0x0020) != 0); // Wait until TXFF is 0
-    UART1_DR_R = data;
+  // supposed to wait until the buffer is not full
+    while((UART1_FR_R & 0x0020) != 0); // Wait until TXFF is 0
+    UART1_DR_R = data; // this is how they have it in the book, so I guess it is ok to just set as is.
 }
 
 char uart_receive(void){
-	return;
+    while((UART1_FR_R & 0x0010) != 0 ); // Wait until RXFE is 0
+    return((char)UART1_DR_R&0xFF); // Returns as a character for correct type
 }
 
 void uart_sendStr(const char *data){
-	//TODO for reference see lcd_puts from lcd.c file
+	// For reference see lcd_puts from lcd.c file
+  while (*data != '\0') {
+    lcd_putc(*data);
+    *data++;
+  }
 }

@@ -37,17 +37,6 @@ int main(void) {
   // (Uncomment ME for UART init part of lab)
 	cyBot_uart_init_clean();  // Clean UART1 initialization, before running your UART1 GPIO init code
 
-//	// Complete this code for configuring the GPIO PORTB part of UART1 initialization (your UART1 GPIO init code)
-//     SYSCTL_RCGCGPIO_R |= (1 << 1);
-//	  while ((SYSCTL_PRGPIO_R & 0x02) == 0) {};
-//		 GPIO_PORTB_DEN_R |= 0x03;
-//		 GPIO_PORTB_AFSEL_R |= 0x03;
-//		 GPIO_PORTB_PCTL_R = (GPIO_PORTB_PCTL_R & 0xFFFFFF00) + 0x00000011;
-//		 // Or see the notes for a coding alternative to assign a value to the PCTL field
-//
-//    // (Uncomment ME for UART init part of lab)
-//		//cyBot_uart_init_last_half();  // Complete the UART device configuration
-//
 //		// Initialize the scan
 //	  // cyBOT_init_Scan();
 //		// Remember servo calibration function and variables from Lab 3
@@ -55,18 +44,35 @@ int main(void) {
 //	// YOUR CODE HERE
 
 	uart_init();
+	int buffer = 0;
+	char buffer_array[21];
 
 	while(1)
 	{
+	    char data = uart_receive();
+		
+		// char msg[50];
+	    // sprintf(msg, "Received a %c\n\r", data); // From lab 3
+		
+		// send_string_uart_library(data); // debug one character at a time
 
-	    char data = cyBot_getByte_blocking();
-	    char msg[50];
+		
+		while (data != '\r') | (buffer < 20) {
+			sprintf(buffer_array,"%c",data);
+			// Debug printing by sending one byte at a time. Will need to comment out later
+			send_string_uart_library(data);
 
-	    sprintf(msg, "Received a %c\n\r", data);
-	    send_string_our_method(msg);
+			buffer +=1;
 
+		}
+		if (data == '\r') | (buffer == 20){
+			lcd_clear();
+			send_string_uart_library(buffer_array);
+			buffer = 0; // resets buffer
 
-
+		}
+		
+		
 	}
 
 }
