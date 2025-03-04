@@ -26,13 +26,21 @@ void send_string(char msg[]){
         // lcd_clear();
 }
 
-void send_string_uart_library(char msg[]){
+void send_string_uart_library_putty(char msg[]){
 
         int i;
         for (i = 0; i < strlen(msg); i++){
             uart_sendChar(msg[i]);
+        }
+}
+
+void send_string_uart_library_lcd(char msg[]){
+
+        int i;
+        for (i = 0; i < strlen(msg); i++){
             lcd_putc(msg[i]);
         }
+
 
 }
 

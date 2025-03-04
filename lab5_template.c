@@ -51,18 +51,30 @@ int main(void) {
         char data = uart_receive();
         sprintf(msg, "%c", data); // Format to array to fit lab 3 syntax
 
+        //add the char to the buffer array as long as it isn't a return character
+        if (data != '\r') {
+            strncat(buffer_array, &data, 1);
+        }
+
         // if the buffer_array becomes 20 or is enter. Stop and print out line on LCD
-        if(strlen(buffer_array) == 20 | data == '\r') {
+        if(strlen(buffer_array) == 20 || data == '\r') {
             lcd_clear();
-            lcd_printf(buffer_array);
+            //makes sure 20 chars are printed and spaces fill in the gaps. Had to do this because \n had weird bugs when the buffer_array had only one char
+            lcd_printf("%-20s%d", buffer_array, strlen(buffer_array));
+            //if the char is a \r, send a newline and return to putty (part 3)
+            if (data == '\r'){
+                send_string_uart_library_putty("\n\r");
+            }
+
+//            uart_sendStr("\nEnd of message"); //demonstrates the sendStr function
+            break;
         }
         else {
-            strncat(buffer_array, &data, 1);
-            send_string_uart_library(msg); // sends character to PuTTy and LCD one by one
+            send_string_uart_library_putty(msg); // send string to putty (msg should only contain one char)
 
-            // will need to do some formatting to get on correct LCD line
-            // prints the size of the buffer
-            lcd_printf("%d",strlen(buffer_array));
+            // prints the current char in msg and the size of the buffer under it
+            lcd_printf("%c\n%d", msg[0], strlen(buffer_array));
+            //lcd_printf("\n%d",strlen(buffer_array));
         }
 
     }

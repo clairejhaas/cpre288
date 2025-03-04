@@ -18,7 +18,8 @@ typedef struct {
 } detected_object;
 
 void send_string(char data[]);
-void send_string_uart_library(char msg[]);
+void send_string_uart_library_putty(char msg[]);
+void send_string_uart_library_lcd(char msg[]);
 
 
 

@@ -85,7 +85,7 @@ char uart_receive(void){
 void uart_sendStr(const char *data){
     // For reference see lcd_puts from lcd.c file
   while (*data != '\0') {
-    lcd_putc(*data);
+    uart_sendChar(*data);
     *data++;
   }
 }
